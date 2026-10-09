@@ -1,0 +1,38 @@
+* {
+    color: white;
+}
+
+body{
+    background-color: darkblue;
+
+}
+
+.div-footer {
+    padding: 5%;
+    font-style: none;
+    background-color: #212529;
+}
+
+.div-footer ul {
+    list-style: none;
+}
+
+a {
+    text-decoration: none;
+}
+
+.div-footer a:hover {
+    color: #C9EEF2;
+}
+
+.direitos-reservados {
+    text-align: center;
+    margin-top: 30px;
+    padding-top: 15px;
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+    font-size: 14px;
+}
+
+.direitos-reservados p {
+    margin: 5px;
+}
