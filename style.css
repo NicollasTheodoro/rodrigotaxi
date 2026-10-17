@@ -1,15 +1,13 @@
-* {
-    color: white;
-}
-
-body{
+/* Texto branco só no corpo da página.
+   Antes era "* { color: white }", o que deixava as opções do <select>
+   brancas sobre fundo branco. */
+body {
     background-color: darkblue;
-
+    color: white;
 }
 
 .div-footer {
     padding: 5%;
-    font-style: none;
     background-color: #212529;
 }
 
@@ -19,6 +17,10 @@ body{
 
 a {
     text-decoration: none;
+}
+
+.div-footer a {
+    color: white;
 }
 
 .div-footer a:hover {
@@ -35,4 +37,13 @@ a {
 
 .direitos-reservados p {
     margin: 5px;
+}
+
+.form-text {
+    color: #ffd7d7;
+}
+
+/* Âncoras não ficam coladas no topo ao rolar */
+html {
+    scroll-behavior: smooth;
 }

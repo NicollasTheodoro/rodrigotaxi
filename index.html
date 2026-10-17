@@ -4,6 +4,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rodrigo Táxi | Agende sua corrida</title>
+    <meta name="description" content="Rodrigo Táxi: carro de 7 lugares com corridas para todo o Rio de Janeiro. Agende sua corrida pelo WhatsApp em poucos segundos.">
+    <meta name="theme-color" content="#00008b">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Rodrigo Táxi | Agende sua corrida">
+    <meta property="og:description" content="Carro de 7 lugares. Corridas para todo o Rio de Janeiro. Agende pelo WhatsApp.">
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%9A%96%3C/text%3E%3C/svg%3E">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
     <link rel="stylesheet" href="style.css">
@@ -15,29 +22,28 @@
 
 <body>
     <div class="container text-center">
+        <h1 class="visually-hidden">Rodrigo Táxi - Agende sua corrida</h1>
+
         <div class="row justify-content-center">
-            <div class="col-7">
+            <div class="col-12 col-md-7">
                 <nav class="navbar navbar-expand-lg bg-body-tertiary rounded-5 mt-2">
                     <div class="container-fluid">
-                        <a class="navbar-brand" href="#">Navbar</a>
+                        <a class="navbar-brand" href="#">Rodrigo Táxi</a>
                         <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                             data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false"
-                            aria-label="Toggle navigation">
+                            aria-label="Abrir menu">
                             <span class="navbar-toggler-icon"></span>
                         </button>
                         <div class="collapse navbar-collapse" id="navbarNav">
                             <ul class="navbar-nav">
                                 <li class="nav-item">
-                                    <a class="nav-link active" aria-current="page" href="#">Home</a>
+                                    <a class="nav-link active" aria-current="page" href="#">Início</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="#">Features</a>
+                                    <a class="nav-link" href="#agendar">Agendar corrida</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="#">Pricing</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link disabled" aria-disabled="true">Disabled</a>
+                                    <a class="nav-link" href="#contato">Contato</a>
                                 </li>
                             </ul>
                         </div>
@@ -47,122 +53,118 @@
         </div>
         <br>
         <div class="row justify-content-center">
-            <div class="col-12 justify-content-center">
-                <div id="carouselExample" class="carousel slide">
+            <div class="col-12">
+                <div id="carouselExample" class="carousel slide" data-bs-ride="carousel" data-bs-interval="5000">
+                    <div class="carousel-indicators">
+                        <button type="button" data-bs-target="#carouselExample" data-bs-slide-to="0" class="active"
+                            aria-current="true" aria-label="Slide 1"></button>
+                        <button type="button" data-bs-target="#carouselExample" data-bs-slide-to="1"
+                            aria-label="Slide 2"></button>
+                        <button type="button" data-bs-target="#carouselExample" data-bs-slide-to="2"
+                            aria-label="Slide 3"></button>
+                    </div>
                     <div class="carousel-inner">
                         <div class="carousel-item active">
-                            <img src="Design sem nome.png" class="d-block w-100" alt="...">
+                            <img src="img/anuncio-1.webp" class="d-block w-100" width="1600" height="800"
+                                alt="Rodrigo Táxi: precisa de um carro? Carro de 7 lugares e corridas por todo o Rio de Janeiro">
                         </div>
                         <div class="carousel-item">
-                            <img src="Imagem-Bem-Vindo.png" class="d-block w-100" alt="...">
+                            <img src="img/anuncio-2.webp" class="d-block w-100" width="1600" height="800"
+                                loading="lazy" alt="Propaganda: bem-vindo">
                         </div>
                         <div class="carousel-item">
-                            <img src="Academia.png" class="d-block w-100" alt="...">
+                            <img src="img/anuncio-3.webp" class="d-block w-100" width="1600" height="800"
+                                loading="lazy" alt="Propaganda de academia: faça sua matrícula com desconto">
                         </div>
                     </div>
                     <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample"
                         data-bs-slide="prev">
                         <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                        <span class="visually-hidden">Previous</span>
+                        <span class="visually-hidden">Anterior</span>
                     </button>
                     <button class="carousel-control-next" type="button" data-bs-target="#carouselExample"
                         data-bs-slide="next">
                         <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                        <span class="visually-hidden">Next</span>
+                        <span class="visually-hidden">Próximo</span>
                     </button>
                 </div>
             </div>
         </div>
-        <div class="row">
-            <div class="col-2">
-                1 of 3
-            </div>
-            <div class="col">
-                <div class="row justify-content-center mt-5">
 
-                    <div class="col-7">
+        <div class="row justify-content-center mt-5" id="agendar">
+            <div class="col-12 col-md-9 col-lg-7">
 
-                        <form class="row g-3" id="formCorrida">
+                <form class="row g-3" id="formCorrida">
 
-                            <div class="col-12">
-                                <label class="form-label">
-                                    Deseja marcar uma corrida?
-                                </label>
-                            </div>
-
-                            <div class="col-md-6">
-                                <label for="city" class="form-label">
-                                    Endereço de partida
-                                </label>
-
-                                <input type="text" class="form-control" id="partida" placeholder="Rua Vasconcelos, n30"
-                                    required>
-                            </div>
-
-                            <div class="col-md-6">
-                                <label for="city" class="form-label">
-                                    Endereço de chegada
-                                </label>
-
-                                <input type="text" class="form-control" id="chegada"
-                                    placeholder="Rua fulano da Silva, n56" required>
-                            </div>
-
-                            <div class="col-md justify-content-center">
-                                <label for="state" class="form-label">
-                                    Marque o horário
-                                </label>
-
-                                <select class="form-select" id="horario" required>
-                                    <option value="" selected disabled>
-                                        Baseado no horário de brasília
-                                    </option>
-                                    <option>7:00</option>
-                                    <option>8:00</option>
-                                    <option>9:00</option>
-                                    <option>10:00</option>
-                                    <option>11:00</option>
-                                    <option>12:00</option>
-                                    <option>13:00</option>
-                                    <option>14:00</option>
-                                    <option>15:00</option>
-                                    <option>16:00</option>
-                                    <option>17:00</option>
-                                    <option>18:00</option>
-                                    <option>19:00</option>
-                                    <option>20:00</option>
-                                    <option>21:00</option>
-                                    <option>22:00</option>
-                                    <option>23:00</option>
-                                </select>
-                            </div>
-
-                            <div class="col-12">
-                                <button class="btn btn-primary" type="submit">
-                                    Contate-me
-                                </button>
-                            </div>
-
-                        </form>
-
+                    <div class="col-12">
+                        <h2 class="h5">Deseja marcar uma corrida?</h2>
                     </div>
 
-                </div>
+                    <div class="col-12">
+                        <label for="nome" class="form-label">Seu nome</label>
+                        <input type="text" class="form-control" id="nome" placeholder="Maria Silva"
+                            autocomplete="name" required>
+                    </div>
 
-            </div>
-            <div class="col-2">
-                3 of 3
+                    <div class="col-md-6">
+                        <label for="partida" class="form-label">Endereço de partida</label>
+                        <input type="text" class="form-control" id="partida" placeholder="Rua Vasconcelos, n30"
+                            autocomplete="street-address" required>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label for="chegada" class="form-label">Endereço de chegada</label>
+                        <input type="text" class="form-control" id="chegada"
+                            placeholder="Rua Fulano da Silva, n56" required>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label for="data" class="form-label">Data</label>
+                        <input type="date" class="form-control" id="data" required>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label for="horario" class="form-label">Horário (Brasília)</label>
+                        <select class="form-select" id="horario" required>
+                            <option value="" selected disabled>Selecione o horário</option>
+                                    <option value="7:00">7:00</option>
+                                    <option value="8:00">8:00</option>
+                                    <option value="9:00">9:00</option>
+                                    <option value="10:00">10:00</option>
+                                    <option value="11:00">11:00</option>
+                                    <option value="12:00">12:00</option>
+                                    <option value="13:00">13:00</option>
+                                    <option value="14:00">14:00</option>
+                                    <option value="15:00">15:00</option>
+                                    <option value="16:00">16:00</option>
+                                    <option value="17:00">17:00</option>
+                                    <option value="18:00">18:00</option>
+                                    <option value="19:00">19:00</option>
+                                    <option value="20:00">20:00</option>
+                                    <option value="21:00">21:00</option>
+                                    <option value="22:00">22:00</option>
+                                    <option value="23:00">23:00</option>
+                        </select>
+                        <div class="form-text" id="avisoHorario"></div>
+                    </div>
+
+                    <div class="col-12">
+                        <button class="btn btn-primary" type="submit">Contate-me</button>
+                    </div>
+
+                </form>
+
             </div>
         </div>
     </div>
 
-
-                <br>
+    <br>
+    <div id="contato"></div>
     <footer>
         <div class="div-footer">
             <div class="footer-colunas">
                 <div>
-                    <h1>MINHAS REDES</h1>
+                    <h2 class="h1">MINHAS REDES</h2>
                     <ul id="minhas-redes">
                         <li><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                 class="bi bi-instagram" viewBox="0 0 16 16">
@@ -178,19 +180,18 @@
                                 class="bi bi-github" viewBox="0 0 16 16">
                                 <path
                                     d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8" />
-                            </svg> <a href="https://github.com/NicollasTheodoro">GitHub</a></li>
+                            </svg> <a href="https://github.com/NicollasTheodoro" target="_blank" rel="noopener">GitHub</a></li>
                         <li><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                 class="bi bi-envelope" viewBox="0 0 16 16">
                                 <path
                                     d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm2-1a1 1 0 0 0-1 1v.217l7 4.2 7-4.2V4a1 1 0 0 0-1-1zm13 2.383-4.708 2.825L15 11.105zm-.034 6.876-5.64-3.471L8 9.583l-1.326-.795-5.64 3.47A1 1 0 0 0 2 13h12a1 1 0 0 0 .966-.741M1 11.105l4.708-2.897L1 5.383z" />
-                            </svg> <a
-                                href="https://mail.google.com/mail/u/0/?hl=pt-BR#advanced-search/to=theodoronicollas1%40gmail.com&query=in%3Asent&isrefinement=true&todisplay=theodoronicollas1%40gmail.com?compose=new">theodoronicollas1@gmail.com</a>
+                            </svg> <a href="mailto:theodoronicollas1@gmail.com">theodoronicollas1@gmail.com</a>
                         </li>
                     </ul>
                 </div>
 
                 <div class="direitos-reservados">
-                    <p><a href="https://nicollastheodoro.github.io/site-repositorio/index.html">© 2026 Nícollas A. Theodoro</a></p>
+                    <p><a href="https://nicollastheodoro.github.io/site-repositorio/index.html" target="_blank" rel="noopener">© 2026 Nícollas A. Theodoro</a></p>
                     <p>Todos os direitos reservados.</p>
                 </div>
             </div>
