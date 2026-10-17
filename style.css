@@ -47,3 +47,10 @@ a {
 html {
     scroll-behavior: smooth;
 }
+
+/* As imagens do carrossel mantêm a proporção original.
+   Sem "height: auto", o atributo height do HTML esticava a imagem. */
+.carousel-item img {
+    width: 100%;
+    height: auto;
+}
