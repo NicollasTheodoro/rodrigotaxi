@@ -104,62 +104,72 @@
         <div class="row justify-content-center mt-5" id="agendar">
             <div class="col-12 col-md-9 col-lg-7">
 
-                <form class="row g-3" id="formCorrida">
+                <div class="row g-3 text-start" id="escolha">
+                    <div class="col-12 text-center">
+                        <h2 class="h5">Escolha seu motorista</h2>
+                    </div>
+                    <div class="col-12" id="statusMotoristas" role="status">Carregando motoristas...</div>
+                    <div class="row g-3 m-0 p-0" id="listaMotoristas"></div>
+                </div>
+
+                <form class="row g-3 mt-3 d-none text-start" id="formCorrida">
 
                     <div class="col-12">
-                        <h2 class="h5">Deseja marcar uma corrida?</h2>
+                        <h2 class="h5 text-center">Deseja marcar uma corrida com <span id="nomeEscolhido"></span>?</h2>
+                        <p class="text-center form-text" id="infoEscolhido"></p>
                     </div>
 
                     <div class="col-12">
                         <label for="nome" class="form-label">Seu nome</label>
                         <input type="text" class="form-control" id="nome" placeholder="Maria Silva"
-                            autocomplete="name" required>
+                            autocomplete="name" maxlength="50" required>
                     </div>
 
                     <div class="col-md-6">
                         <label for="partida" class="form-label">Endereço de partida</label>
                         <input type="text" class="form-control" id="partida" placeholder="Rua Vasconcelos, n30"
-                            autocomplete="street-address" required>
+                            autocomplete="street-address" maxlength="120" required>
                     </div>
 
                     <div class="col-md-6">
                         <label for="chegada" class="form-label">Endereço de chegada</label>
                         <input type="text" class="form-control" id="chegada"
-                            placeholder="Rua Fulano da Silva, n56" required>
+                            placeholder="Rua Fulano da Silva, n56" maxlength="120" required>
                     </div>
 
                     <div class="col-md-6">
                         <label for="data" class="form-label">Data</label>
                         <input type="date" class="form-control" id="data" required>
+                        <div class="form-text" id="avisoData"></div>
                     </div>
 
                     <div class="col-md-6">
                         <label for="horario" class="form-label">Horário (Brasília)</label>
-                        <select class="form-select" id="horario" required>
-                            <option value="" selected disabled>Selecione o horário</option>
-                                    <option value="7:00">7:00</option>
-                                    <option value="8:00">8:00</option>
-                                    <option value="9:00">9:00</option>
-                                    <option value="10:00">10:00</option>
-                                    <option value="11:00">11:00</option>
-                                    <option value="12:00">12:00</option>
-                                    <option value="13:00">13:00</option>
-                                    <option value="14:00">14:00</option>
-                                    <option value="15:00">15:00</option>
-                                    <option value="16:00">16:00</option>
-                                    <option value="17:00">17:00</option>
-                                    <option value="18:00">18:00</option>
-                                    <option value="19:00">19:00</option>
-                                    <option value="20:00">20:00</option>
-                                    <option value="21:00">21:00</option>
-                                    <option value="22:00">22:00</option>
-                                    <option value="23:00">23:00</option>
-                        </select>
+                        <select class="form-select" id="horario" required></select>
                         <div class="form-text" id="avisoHorario"></div>
                     </div>
 
+                    <div class="col-md-6">
+                        <label for="passageiros" class="form-label">Passageiros</label>
+                        <select class="form-select" id="passageiros" required></select>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label for="pagamento" class="form-label">Forma de pagamento</label>
+                        <select class="form-select" id="pagamento" required></select>
+                    </div>
+
+                    <div class="col-12" id="extras"></div>
+
                     <div class="col-12">
-                        <button class="btn btn-primary" type="submit">Contate-me</button>
+                        <label for="obs" class="form-label">Observações (opcional)</label>
+                        <input type="text" class="form-control" id="obs" maxlength="80">
+                    </div>
+
+                    <div class="col-12 text-center">
+                        <div id="erroEnvio" class="alert alert-danger d-none" role="alert"></div>
+                        <button class="btn btn-primary" type="submit" id="botaoEnviar">Contate-me</button>
+                        <button class="btn btn-outline-light ms-2" type="button" id="trocar">Trocar motorista</button>
                     </div>
 
                 </form>

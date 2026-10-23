@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meu painel | Rodrigo Táxi</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <link rel="stylesheet" href="/telas/telas.css">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+        crossorigin="anonymous"></script>
+    <script src="/js/comum.js"></script>
+</head>
+
+<body class="container">
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-9 col-lg-7">
+            <div id="nav"></div>
+
+            <div class="d-flex justify-content-between align-items-center mt-4 mb-3">
+                <h1 class="h3 m-0" id="titulo">Meu painel</h1>
+                <button class="btn btn-outline-light btn-sm" id="sair" type="button">Sair</button>
+            </div>
+
+            <div id="statusBox" class="alert d-none" role="alert"></div>
+            <div id="alerta" class="alert d-none" role="alert"></div>
+
+            <div class="row g-3 mb-4" id="resumo"></div>
+
+            <h2 class="h5">Meus dados</h2>
+            <form class="row g-3" id="formPerfil">
+                <div class="col-12">
+                    <label class="form-label" for="nome">Nome</label>
+                    <input class="form-control" id="nome" maxlength="60" required>
+                </div>
+                <div class="col-12">
+                    <label class="form-label" for="telefone">WhatsApp</label>
+                    <input class="form-control" id="telefone" disabled>
+                    <div class="form-text">Para trocar o número, fale com o administrador.</div>
+                </div>
+                <div id="perfil" class="row g-3 m-0 p-0"></div>
+                <div class="col-12">
+                    <div class="form-check" id="foto-remover-box">
+                        <input class="form-check-input" type="checkbox" id="removerFoto">
+                        <label class="form-check-label" for="removerFoto">Remover minha foto</label>
+                    </div>
+                </div>
+                <div class="col-12">
+                    <label class="form-label" for="novaSenha">Nova senha (deixe em branco para manter)</label>
+                    <input class="form-control" id="novaSenha" type="password" minlength="6" autocomplete="new-password">
+                </div>
+                <div class="col-12">
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" role="switch" id="pausado">
+                        <label class="form-check-label" for="pausado">Pausar meu atendimento (não receber novas solicitações)</label>
+                    </div>
+                </div>
+                <button class="btn btn-primary col-12" type="submit" id="botao">Salvar alterações</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById("nav").innerHTML = NAV_MOTORISTA;
+        document.getElementById("perfil").innerHTML = camposPerfilHTML();
+        const alerta = document.getElementById("alerta");
+        let foto = null;
+        ligarFoto((f) => (foto = f));
+
+        const STATUS = {
+            pendente: ["warning", "Seu cadastro está aguardando aprovação. Você ainda não aparece para os passageiros."],
+            ativo: ["success", "Cadastro aprovado: você aparece para os passageiros."],
+            inativo: ["secondary", "Seu cadastro está desativado e não aparece para os passageiros. Fale com o administrador."],
+        };
+
+        async function carregar() {
+            let d;
+            try {
+                d = await api("/api/motorista/me");
+            } catch (e) {
+                if (e.status === 401) { location.href = "motorista_login.html"; return; }
+                mostraAlerta(alerta, e.message);
+                return;
+            }
+            document.getElementById("titulo").textContent = `Olá, ${d.nome}`;
+            const [tipo, texto] = STATUS[d.status] || STATUS.pendente;
+            const sb = document.getElementById("statusBox");
+            sb.className = `alert alert-${tipo}`;
+            sb.textContent = texto;
+            document.getElementById("resumo").innerHTML = `
+                <div class="col-6"><div class="card"><div class="card-body text-center"><div class="fs-3">${d.solicitacoesHoje}</div><div class="small">solicitações hoje</div></div></div></div>
+                <div class="col-6"><div class="card"><div class="card-body text-center"><div class="fs-3">${d.solicitacoes30d}</div><div class="small">nos últimos 30 dias</div></div></div></div>`;
+            document.getElementById("nome").value = d.nome;
+            document.getElementById("telefone").value = d.telefone;
+            document.getElementById("pausado").checked = !!d.pausado;
+            preencherPerfil(d);
+            const prev = document.getElementById("p_prev");
+            if (d.temFoto) { prev.src = `/api/motoristas/${d.id}/foto?${Date.now()}`; prev.classList.remove("d-none"); }
+            else prev.classList.add("d-none");
+            document.getElementById("foto-remover-box").classList.toggle("d-none", !d.temFoto);
+        }
+
+        document.getElementById("formPerfil").addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const botao = document.getElementById("botao");
+            botao.disabled = true;
+            alerta.classList.add("d-none");
+            try {
+                await api("/api/motorista/me", {
+                    method: "PUT",
+                    corpo: {
+                        nome: document.getElementById("nome").value,
+                        ...lerPerfil(),
+                        pausado: document.getElementById("pausado").checked,
+                        foto,
+                        removerFoto: document.getElementById("removerFoto").checked,
+                        novaSenha: document.getElementById("novaSenha").value,
+                    },
+                });
+                foto = null;
+                document.getElementById("novaSenha").value = "";
+                document.getElementById("removerFoto").checked = false;
+                mostraAlerta(alerta, "Alterações salvas.", "success");
+                await carregar();
+            } catch (err) {
+                mostraAlerta(alerta, err.message);
+            }
+            botao.disabled = false;
+        });
+
+        document.getElementById("sair").addEventListener("click", async () => {
+            await api("/api/motorista/logout", { method: "POST", corpo: {} }).catch(() => {});
+            location.href = "motorista_login.html";
+        });
+
+        carregar();
+    </script>
+</body>
+
+</html>

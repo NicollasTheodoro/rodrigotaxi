@@ -1,0 +1,16 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "rodrigotaxi",
+  "main": "src/index.js",
+  "compatibility_date": "2026-10-01",
+  "assets": {
+    "directory": "./public",
+    // Só as rotas /api/* passam pelo Worker; o resto é servido direto como arquivo estático
+    "run_worker_first": ["/api/*"]
+  },
+  "kv_namespaces": [
+    // Se o deploy não criar o KV sozinho, rode: npx wrangler kv namespace create TAXI_KV
+    // e cole aqui o "id" gerado: { "binding": "TAXI_KV", "id": "..." }
+    { "binding": "TAXI_KV" }
+  ]
+}

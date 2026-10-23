@@ -1,0 +1,38 @@
+body {
+    background-color: darkslategrey;
+    color: white;
+    padding-bottom: 3rem;
+}
+
+a {
+    text-decoration: none;
+    color: white;
+}
+
+a:hover {
+    color: #7CFC9A;
+}
+
+.form-text,
+.text-muted {
+    color: #d5e3e3 !important;
+}
+
+.foto-prev {
+    width: 96px;
+    height: 96px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 2px solid white;
+}
+
+.table {
+    --bs-table-bg: transparent;
+    --bs-table-color: white;
+    --bs-table-striped-bg: rgba(255, 255, 255, 0.06);
+    --bs-table-striped-color: white;
+}
+
+.card {
+    color: #212529;
+}

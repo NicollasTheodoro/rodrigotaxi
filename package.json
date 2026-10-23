@@ -1,0 +1,15 @@
+{
+  "name": "rodrigotaxi",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy"
+  },
+  "devDependencies": {
+    "wrangler": "^4.45.0"
+  },
+  "dependencies": {
+    "dotenv": "^18.0.9"
+  }
+}

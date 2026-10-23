@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>Admin | Rodrigo Táxi</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <link rel="stylesheet" href="/telas/telas.css">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+        crossorigin="anonymous"></script>
+    <script src="/js/comum.js"></script>
+</head>
+
+<body class="container-lg">
+    <!-- Login -->
+    <div id="telaLogin" class="row justify-content-center mt-5 d-none">
+        <div class="col-12 col-md-6 col-lg-4">
+            <h1 class="h3 mb-4">Admin | Rodrigo Táxi</h1>
+            <div id="alertaLogin" class="alert d-none" role="alert"></div>
+            <form id="formLogin" class="row g-3">
+                <div class="col-12">
+                    <label class="form-label" for="senha">Senha</label>
+                    <input class="form-control" id="senha" type="password" autocomplete="current-password" required>
+                </div>
+                <button class="btn btn-primary col-12" type="submit">Entrar</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Painel -->
+    <div id="telaPainel" class="d-none">
+        <div class="d-flex justify-content-between align-items-center mt-4 mb-3">
+            <h1 class="h3 m-0">Administração</h1>
+            <div>
+                <a class="btn btn-outline-light btn-sm" href="/">Ver site</a>
+                <button class="btn btn-outline-light btn-sm" id="sair" type="button">Sair</button>
+            </div>
+        </div>
+        <div id="alerta" class="alert d-none" role="alert"></div>
+
+        <ul class="nav nav-tabs mb-3" role="tablist">
+            <li class="nav-item"><button class="nav-link active" data-bs-toggle="tab" data-bs-target="#abaMot" type="button">Motoristas <span class="badge text-bg-warning d-none" id="badgePend"></span></button></li>
+            <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#abaMsg" type="button">Mensagens</button></li>
+        </ul>
+
+        <div class="tab-content">
+            <!-- Motoristas -->
+            <div class="tab-pane fade show active" id="abaMot">
+                <div class="table-responsive">
+                    <table class="table table-striped align-middle">
+                        <thead>
+                            <tr><th>Motorista</th><th>WhatsApp</th><th>Carro</th><th>Atendimento</th><th>Status</th><th class="text-end">Ações</th></tr>
+                        </thead>
+                        <tbody id="listaMot"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Mensagens -->
+            <div class="tab-pane fade" id="abaMsg">
+                <form class="row g-2 align-items-end mb-3" id="formPeriodo">
+                    <div class="col-6 col-md-3">
+                        <label class="form-label" for="de">De</label>
+                        <input class="form-control" type="date" id="de" required>
+                    </div>
+                    <div class="col-6 col-md-3">
+                        <label class="form-label" for="ate">Até</label>
+                        <input class="form-control" type="date" id="ate" required>
+                    </div>
+                    <div class="col-12 col-md-6 d-flex flex-wrap gap-2">
+                        <button class="btn btn-primary" type="submit">Buscar</button>
+                        <button class="btn btn-success" type="button" id="btnCsv">Baixar CSV</button>
+                        <button class="btn btn-outline-danger" type="button" id="btnApagar">Apagar este período</button>
+                    </div>
+                </form>
+                <div class="form-text mb-3">Dica: baixe o CSV antes de apagar. As mensagens também expiram sozinhas após 30 dias.</div>
+
+                <div class="row g-3 mb-3" id="resumoMsg"></div>
+
+                <div class="table-responsive">
+                    <table class="table table-striped align-middle">
+                        <thead>
+                            <tr><th>Enviada em</th><th>Motorista</th><th>Passageiro</th><th>Partida → Chegada</th><th>Corrida</th><th>Detalhes</th></tr>
+                        </thead>
+                        <tbody id="listaMsg"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const $ = (id) => document.getElementById(id);
+        const alerta = $("alerta");
+        const fmtData = (iso) => iso.split("-").reverse().join("/");
+
+        function mostra(painel) {
+            $("telaLogin").classList.toggle("d-none", painel);
+            $("telaPainel").classList.toggle("d-none", !painel);
+        }
+
+        async function aoFalhar(e) {
+            if (e.status === 401) { mostra(false); return; }
+            mostraAlerta(alerta, e.message);
+        }
+
+        // ----- Login -----
+        $("formLogin").addEventListener("submit", async (ev) => {
+            ev.preventDefault();
+            try {
+                await api("/api/admin/login", { method: "POST", corpo: { senha: $("senha").value } });
+                $("senha").value = "";
+                iniciar();
+            } catch (e) {
+                mostraAlerta($("alertaLogin"), e.message);
+            }
+        });
+
+        $("sair").addEventListener("click", async () => {
+            await api("/api/admin/logout", { method: "POST", corpo: {} }).catch(() => {});
+            mostra(false);
+        });
+
+        // ----- Motoristas -----
+        const COR = { ativo: "success", pendente: "warning", inativo: "secondary" };
+
+        async function carregaMotoristas() {
+            const lista = await api("/api/admin/motoristas");
+            const pend = lista.filter((m) => m.status === "pendente").length;
+            $("badgePend").textContent = pend;
+            $("badgePend").classList.toggle("d-none", !pend);
+            $("listaMot").innerHTML = lista.map((m) => `
+                <tr>
+                    <td>${esc(m.nome)}${m.pausado ? ' <span class="badge text-bg-secondary">pausado</span>' : ""}<div class="small text-muted">${esc(m.regioes)}</div></td>
+                    <td>${esc(m.telefone)}</td>
+                    <td>${esc(m.carro)}<div class="small text-muted">${m.lugares} lugares · ${esc(m.pagamentos.join(", "))}</div></td>
+                    <td>${m.horaInicio}:00–${m.horaFim}:00<div class="small text-muted">${m.dias.map((d) => NOMES_DIAS[d]).join(" ")}</div></td>
+                    <td><span class="badge text-bg-${COR[m.status]}">${m.status}</span></td>
+                    <td class="text-end text-nowrap">
+                        ${m.status !== "ativo" ? `<button class="btn btn-sm btn-success" data-id="${esc(m.id)}" data-acao="ativo">Aprovar</button>` : ""}
+                        ${m.status === "ativo" ? `<button class="btn btn-sm btn-outline-warning" data-id="${esc(m.id)}" data-acao="inativo">Desativar</button>` : ""}
+                        <button class="btn btn-sm btn-outline-danger" data-id="${esc(m.id)}" data-acao="remover" data-nome="${esc(m.nome)}">Remover</button>
+                    </td>
+                </tr>`).join("") || `<tr><td colspan="6" class="text-center">Nenhum motorista.</td></tr>`;
+        }
+
+        $("listaMot").addEventListener("click", async (ev) => {
+            const b = ev.target.closest("button[data-acao]");
+            if (!b) return;
+            try {
+                if (b.dataset.acao === "remover") {
+                    if (!confirm(`Remover o motorista ${b.dataset.nome}? Isso não pode ser desfeito.`)) return;
+                    await api(`/api/admin/motoristas/${b.dataset.id}`, { method: "DELETE" });
+                } else {
+                    await api(`/api/admin/motoristas/${b.dataset.id}`, { method: "PATCH", corpo: { status: b.dataset.acao } });
+                }
+                await carregaMotoristas();
+            } catch (e) { aoFalhar(e); }
+        });
+
+        // ----- Mensagens -----
+        function periodo() { return `de=${$("de").value}&ate=${$("ate").value}`; }
+
+        async function carregaMensagens() {
+            const r = await api(`/api/admin/mensagens?${periodo()}`);
+            $("resumoMsg").innerHTML = `
+                <div class="col-12 col-md-3"><div class="card"><div class="card-body text-center"><div class="fs-3">${r.total}</div><div class="small">mensagens no período</div></div></div></div>
+                ${r.porMotorista.map((p) => `<div class="col-6 col-md-3"><div class="card"><div class="card-body text-center"><div class="fs-3">${p.total}</div><div class="small">${esc(p.nome)}</div></div></div></div>`).join("")}`;
+            $("listaMsg").innerHTML = r.mensagens.map((m) => `
+                <tr>
+                    <td class="text-nowrap">${esc(fmtData(m.ts.slice(0, 10)))} ${esc(m.ts.slice(11, 16))}</td>
+                    <td>${esc(m.mnome)}</td>
+                    <td>${esc(m.nome)}</td>
+                    <td>${esc(m.partida)} → ${esc(m.chegada)}</td>
+                    <td class="text-nowrap">${esc(fmtData(m.data))} ${m.hora}:00</td>
+                    <td class="small">${m.pax} pass. · ${esc(m.pg)}${m.bag ? " · bagagem" : ""}${m.pet ? " · pet" : ""}${m.obs ? `<br>${esc(m.obs)}` : ""}</td>
+                </tr>`).join("") || `<tr><td colspan="6" class="text-center">Nenhuma mensagem nesse período.</td></tr>`;
+        }
+
+        $("formPeriodo").addEventListener("submit", (ev) => {
+            ev.preventDefault();
+            if ($("de").value > $("ate").value) return mostraAlerta(alerta, "A data inicial não pode ser depois da final.");
+            alerta.classList.add("d-none");
+            carregaMensagens().catch(aoFalhar);
+        });
+
+        $("btnCsv").addEventListener("click", () => {
+            location.href = `/api/admin/mensagens.csv?${periodo()}`;
+        });
+
+        $("btnApagar").addEventListener("click", async () => {
+            if (!confirm(`Apagar TODAS as mensagens de ${fmtData($("de").value)} até ${fmtData($("ate").value)}? Baixe o CSV antes se quiser guardar.`)) return;
+            try {
+                const r = await api(`/api/admin/mensagens?${periodo()}`, { method: "DELETE" });
+                mostraAlerta(alerta, `${r.apagadas} mensagem(ns) apagada(s).`, "success");
+                await carregaMensagens();
+            } catch (e) { aoFalhar(e); }
+        });
+
+        // ----- Início -----
+        async function iniciar() {
+            try {
+                const hoje = new Date().toLocaleDateString("sv-SE", { timeZone: "America/Sao_Paulo" });
+                if (!$("de").value) { $("de").value = hoje; $("ate").value = hoje; }
+                await carregaMotoristas();
+                mostra(true);
+                await carregaMensagens();
+            } catch (e) {
+                if (e.status === 401) mostra(false);
+                else { mostra(true); mostraAlerta(alerta, e.message); }
+            }
+        }
+        iniciar();
+    </script>
+</body>
+
+</html>
