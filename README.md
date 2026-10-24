@@ -39,3 +39,4 @@ Para testar localmente: crie `.dev.vars` com `ADMIN_PASSWORD=sua-senha` e rode `
 - O plano gratuito do KV permite ~1.000 gravações/exclusões por dia: cada solicitação enviada = 1 gravação; apagar logs = 1 exclusão por mensagem.
 - Os logs guardam nome e endereços de passageiros: trate o CSV conforme a LGPD.
 - Alterações no KV podem levar até ~60 s para aparecer em outras regiões.
+- Não foi implementado limite de tentativas de login nem proteção contra spam no formulário. Se o site ganhar tráfego, vale adicionar o rate limiting da Cloudflare.
